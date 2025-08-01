@@ -1,77 +1,55 @@
-// Importing necessary packages and modules
-import express from "express"; // web framework
-import connectDB from "./mongodb/connect.js";
-import bodyParser from "body-parser";// middleware for parsing request bodies
-import mongoose from "mongoose"; // ODM library for MongoDB
-import cors from "cors"; // middleware for enabling Cross-Origin Resource Sharing
-import * as dotenv from "dotenv"; // package for managing environment variables
-import multer from "multer"; // middleware for handling file uploads
-import helmet from "helmet"; // middleware for securing HTTP headers
-import morgan from "morgan"; // middleware for logging HTTP requests and responses
-import path from "path"; // built-in Node.js module for handling file paths 
-import { fileURLToPath } from "url"; // built-in Node.js module for working with file URLs
-import authRoutes from "./routes/auth.js"; // authentication routes
-import userRoutes from "./routes/users.js"; // user routes
-import { register } from "./controllers/auth.js"; // authentication controller functions
-import User from "./models/User.js"; // user model
-import SavedRecipes from "./models/SavedRecipes.js"; // saved recipes model
-import { users,  savedRecipes} from "./data/index.js"; // sample data
+import express from "express";
+import cors from "cors";
+import * as dotenv from "dotenv";
+import bodyParser from "body-parser";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from "url";
 
-//CONFIGURATIONS AND SETUP
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import recipesRoutes from "./routes/recipes.js";
+
+dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config(); // load environment variables from .env file
-const app = express(); // create express app
-app.use(express.json()); // middleware for parsing JSON request bodies
-app.use(helmet()); // middleware for setting various security-related HTTP headers
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); // middleware for enabling CORS with cross-origin policy
-app.use(morgan("common")); // middleware for logging HTTP requests and responses
-app.use(bodyParser.json({ limit: "30mb", extended: true })); // middleware for parsing JSON request bodies with specified size limit and extended mode
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true })); // middleware for parsing URL-encoded request bodies with specified size limit and extended mode
-app.use(cors()); // middleware for enabling CORS with default options
-app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // serve static files from public/assets directory
 
+const app = express();
 
-/* FILE STORAGE */
+app.use(express.json());
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(cors());
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+/* FILE STORAGE - if you still want profile picture upload */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/assets"); // specify upload destination directory
+    cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname); // specify uploaded file name
-  },
+    cb(null, file.originalname);
+  }
 });
-const upload = multer({ storage }); // create middleware for handling file uploads
+const upload = multer({ storage });
 
-
-/* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register); // register endpoint with file upload middleware
-app.get("/", (req, res) => {
-  res.send({ message: "Hello World!" }); // root endpoint
+/* ROUTES WITH FILES (register with picture) */
+app.post("/auth/register", upload.single("picture"), (req, res, next) => {
+  // Pass to auth route
+  next();
 });
 
 /* ROUTES */
-app.use("/auth", authRoutes); // use authentication routes
-app.use("/users", userRoutes); // use user routes
- 
-//MONGOOSE SETUP
-const PORT = process.env.PORT || 6001; // set server port
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/recipes", recipesRoutes);
 
-const startServer = async () => {
-  try {
-      connectDB(process.env.MONGO_URL, () => {
-      console.log("MongoDB connected, starting server...");
-      app.listen(PORT, () => console.log("Server started on port http://localhost:8080")
-      );
-    });
-  } catch (error) {
-      console.log(error);
-  }
-};
-startServer();
+/* TEST ROUTE */
+app.get("/", (req, res) => {
+  res.send({ message: "Static Recipe App Running" });
+});
 
-
-
-
-
-
+/* START SERVER */
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));

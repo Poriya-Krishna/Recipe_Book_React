@@ -1,60 +1,39 @@
-import SavedRecipes from "../models/SavedRecipes.js";
+import { users, recipes, savedRecipes } from "../data.js";
 
-/* READ */
-/**
- * Retrieves the saved recipes of a user with the given user ID.
- * Returns an array of recipe IDs in the response.
- */
-export const getSavedRecipe = async (req, res) => {
+
+/* READ - Get saved recipes for a user */
+export const getSavedRecipe = (req, res) => {
   try {
     const { userId } = req.params;
-    const savedRecipes = await SavedRecipes.find({ userId });
-    res.status(200).json(savedRecipes[0].recipeId);
+    const userData = savedRecipes.find(r => r.userId === userId);
+    res.status(200).json(userData ? userData.recipeId : []);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
-/* UPDATE */
-/**
- * Updates the saved recipes of a user with the given user ID.
- * If the recipe ID is already in the user's saved recipes, removes it.
- * If the recipe ID is not in the user's saved recipes, adds it.
- * Returns an array of recipe IDs in the response.
- */
-
-export const updateSavedRecipe = async (req, res) => {
+/* UPDATE - Toggle saved recipe */
+export const updateSavedRecipe = (req, res) => {
   try {
     const { userId } = req.params;
     const { recipeId } = req.body;
-    const userSavedRecipe = await SavedRecipes.find({ userId });
-    if(userSavedRecipe.length === 0) {
-      const newSavedRecipes = new SavedRecipes({
-        userId, 
-        recipeId: recipeId
-      })
-      await newSavedRecipes.save();
+
+    let userData = savedRecipes.find(r => r.userId === userId);
+
+    // If no saved recipes yet for this user
+    if (!userData) {
+      savedRecipes.push({ userId, recipeId: [recipeId] });
+      return res.status(200).json([recipeId]);
     }
-    else if (
-      userSavedRecipe.length !== 0 &&
-      userSavedRecipe[0].recipeId.includes(recipeId)
-    ) {
-      userSavedRecipe[0].recipeId = userSavedRecipe[0].recipeId.filter(
-        (id) => id !== recipeId
-      );
+
+    // Toggle recipe: remove if exists, else add
+    if (userData.recipeId.includes(recipeId)) {
+      userData.recipeId = userData.recipeId.filter(id => id !== recipeId);
+    } else {
+      userData.recipeId.push(recipeId);
     }
-    else{
-      userSavedRecipe[0].recipeId.push(recipeId);
-    } 
-    const updatedSavedRecipes = await SavedRecipes.findByIdAndUpdate(
-      userSavedRecipe[0]._id,
-      { 
-        userId,
-        recipeId: [...userSavedRecipe[0].recipeId]
-       },
-      { new: true }
-    );
-    res.status(200).json(updatedSavedRecipes.recipeId);
+
+    res.status(200).json(userData.recipeId);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

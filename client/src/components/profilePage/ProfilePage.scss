@@ -1,40 +1,77 @@
-.profile-container{
-    margin-top: 92px;
-    padding: 2rem 4rem;
+.profile-container {
+  margin-top: 92px;
+  padding: 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
-.profile-recipe-catalogue-container{
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 20px;
-    background-color: #1A1A1A;
-    border-radius: 8px;
+
+.saved-recipes-text {
+  color: #fff;
+  padding-left: 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
-.saved-recipes-text{
-    color: #fff;
-    padding-left: 20px;
+
+.profile-recipe-catalogue-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+
+  // Smooth entry animation
+  animation: fadeIn 0.4s ease-in-out;
 }
-@media screen and (max-width: 900px) {
-    .profile-container{
-        padding: 32px;
-    }
+
+.no-recipes {
+  color: #aaa;
+  font-size: 1rem;
+  padding: 1rem;
+  text-align: center;
 }
-@media screen and (max-width: 426px) {
-    .profile-container{
-        padding: 16px;
-    }
-}
+
+/* Responsive adjustments */
 @media screen and (max-width: 1200px) {
-    .profile-recipe-catalogue-container{
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .profile-recipe-catalogue-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
+
+@media screen and (max-width: 900px) {
+  .profile-container {
+    padding: 32px;
+  }
+}
+
 @media screen and (max-width: 768px) {
-    .profile-recipe-catalogue-container{
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .profile-recipe-catalogue-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
 @media screen and (max-width: 550px) {
-    .profile-recipe-catalogue-container{
-        grid-template-columns: repeat(1, 1fr);
-    }
+  .profile-recipe-catalogue-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 426px) {
+  .profile-container {
+    padding: 16px;
+  }
+}
+
+/* Fade-in animation for smoother load */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

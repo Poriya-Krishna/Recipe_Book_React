@@ -1,30 +1,74 @@
-.recipe-container{
-    cursor: pointer;
-    padding: 20px;
-    padding-bottom: 10px;
-    background-color: #1A1A1A;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
+.recipe-container {
+  cursor: pointer;
+  padding: 20px;
+  padding-bottom: 10px;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  }
 }
-.recipe-catalogue-title{
-    display: flex;
-    justify-content: space-between;
-    // align-items: center;
-    color: #fff;
-    margin-top: 10px;
+
+.recipe-catalogue-image {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
 }
-.recipe-catalogue-image{
-    width: 100%;
-    border-radius: 8px;
+
+.recipe-catalogue-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  margin-top: 10px;
 }
-.recipe-title{
-    width: 85%;
+
+.recipe-title {
+  width: 85%;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
 .bookmark-icon {
-    width: 15%;
-    color: #fff;
+  width: 15%;
+  color: #fff;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #7377e4;
+  }
 }
-.bookmarked{
-    color: #5457b6;
+
+.bookmarked {
+  color: #5457b6;
+}
+
+/* Responsive adjustments for smaller cards */
+@media screen and (max-width: 768px) {
+  .recipe-container {
+    padding: 16px;
+  }
+
+  .recipe-title {
+    font-size: 0.95rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .recipe-container {
+    padding: 14px;
+  }
+
+  .recipe-title {
+    font-size: 0.9rem;
+  }
 }

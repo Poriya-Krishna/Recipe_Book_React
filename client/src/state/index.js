@@ -1,13 +1,11 @@
-// Importing createSlice from redux toolkit 
 import { createSlice } from "@reduxjs/toolkit";
 
-// Initial state for auth reducer 
+// Initial state
 const initialState = {
   user: null,
-  token: null,
-  savedRecipes: [],
+  savedRecipes: [], // No token needed
 };
-// Creating auth slice
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -15,26 +13,18 @@ export const authSlice = createSlice({
     // Set user login data
     setLogin: (state, action) => {
       state.user = action.payload.user;
-      state.token = action.payload.token;
     },
     // Clear user login data
     setLogout: (state) => {
       state.user = null;
-      state.token = null;
       state.savedRecipes = [];
     },
-    // Set user saved recipes data
+    // Set saved recipes directly (no token check)
     setSavedRecipes: (state, action) => {
-      if (state.user && state.token) {
-        state.savedRecipes = action.payload.savedRecipes;
-      } else {
-        console.error("Saved recipes not found :(");
-      }
+      state.savedRecipes = action.payload.savedRecipes;
     },
   },
 });
-// Exporting authSlice actions
-export const { setLogin, setLogout, setSavedRecipes } =
-  authSlice.actions;
-// Exporting auth reducer
+
+export const { setLogin, setLogout, setSavedRecipes } = authSlice.actions;
 export default authSlice.reducer;

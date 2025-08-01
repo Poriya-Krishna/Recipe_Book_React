@@ -1,50 +1,83 @@
-.login-container{
-    position: relative;
+.login-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #121212; // Slightly darker background for contrast
 }
-.header{
-    z-index: 100;
-    position: fixed;
-    top: 0px;
-    width: 100%;
+
+.header {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  font-size: 32px;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1A1A1A;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  img {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+  }
+
+  span {
+    display: inline-block;
+    color: #fff;
     font-size: 32px;
-    height: 90px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #1A1A1A;
+    font-weight: 500;
+  }
+}
+
+.form-container {
+  box-sizing: border-box;
+  width: 50%;
+  margin: 30px auto;
+  margin-top: 120px;
+  background-color: #1A1A1A;
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+
+  span {
+    display: inline-block;
     color: #fff;
     font-weight: 500;
-    img{
-        width: 70px;
-        height: 70px;
-    }
-    span{
-        display: inline-block;
-        color: #fff;
-        font-size: 32px;
-        font-weight: 500;
-    }
-}
-.form-container {
-    box-sizing: border-box;
-    width: 50%;
-    margin: 30px auto;
-    margin-top: 120px;
-    background-color: #1A1A1A;
-    padding: 30px;
-    border-radius: 24px;
-    span{
-        display: inline-block;
-        color: #fff;
-        font-weight: 500;
-        margin-bottom: 24px;
-    }
+    margin-bottom: 24px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
 }
 
+/* Media queries for responsiveness */
+@media only screen and (max-width: 1000px) {
+  .form-container {
+    width: 93%;
+    padding: 20px;
+    border-radius: 16px;
+  }
 
-// media queries 
-@media only screen and (max-width: 1000px){
-    .form-container{
-        width: 93%;
-    }
+  .header span {
+    font-size: 24px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .form-container {
+    margin-top: 100px;
+  }
+
+  .header img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .header span {
+    font-size: 20px;
+  }
 }

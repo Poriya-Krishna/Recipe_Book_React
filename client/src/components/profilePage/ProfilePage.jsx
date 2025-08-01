@@ -1,4 +1,4 @@
-import React, {  useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../profilePage/ProfilePage.scss";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -15,93 +15,99 @@ const ProfilePage = () => {
   const [recipeDetail, setRecipeDetail] = useState(null);
   const dispatch = useDispatch();
 
-  // Select user, token, and saved recipes from the Redux store
-  const { user, token, savedRecipes } = useSelector((state) => state);
+  // Select user and saved recipes from Redux
+  const { user, savedRecipes } = useSelector((state) => state);
 
-  // Get API key from environment variables
+  // API key (for Spoonacular)
   const API_KEY = process.env.REACT_APP_RECIPE_APP_API_KEY;
 
-  // Fetch saved recipes and update state and Redux store
+  // Fetch saved recipes (IDs) from static backend and details from Spoonacular
   const getSavedRecipes = async () => {
-      try{
-       // Fetch saved recipes from the backend
+    try {
+      // Get saved recipe IDs from local backend
       const savedRecipesResponse = await axios.get(
-        `https://recipe-book-ycpw.onrender.com/users/${user._id}/savedRecipe`,
+        `http://localhost:8080/users/${user.id}/savedRecipe`,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
-      const savedRecipesData = await savedRecipesResponse.data;
 
-      // Update saved recipes in the Redux store
+      const savedRecipesData = savedRecipesResponse.data;
+
       if (savedRecipesData) {
-        dispatch(
-          setSavedRecipes({
-            savedRecipes: savedRecipesData,
-          })
-        );
+        dispatch(setSavedRecipes({ savedRecipes: savedRecipesData }));
       }
 
-      // Fetch recipe details from Spoonacular API for each saved recipe
-      const response = await axios.get(`https://api.spoonacular.com/recipes/informationBulk?apiKey=${API_KEY}&ids=${savedRecipes.join(',')}`);
-      const data =  response.data;
-      setRecipes([...data]);
-    }
-    catch(error){
-      console.log(error);
+      // If savedRecipes is not empty, fetch details from Spoonacular
+      if (savedRecipesData.length > 0) {
+        const response = await axios.get(
+          `https://api.spoonacular.com/recipes/informationBulk?apiKey=${API_KEY}&ids=${savedRecipesData.join(",")}`
+        );
+        setRecipes(response.data);
+      } else {
+        setRecipes([]);
+      }
+    } catch (error) {
+      console.log("Error fetching saved recipes:", error);
     }
   };
-  // Call getSavedRecipes() only once on initial render
-  useMemo(() => {
-    getSavedRecipes();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Run on initial render
+  useEffect(() => {
+    if (user?.id) {
+      getSavedRecipes();
+    }
+  }, [user]);
 
-  // Callback function to handle click on a recipe in the recipe list
-  function handleRecipeDetails(check , recipeDetail) {
+  // Handle recipe detail click
+  function handleRecipeDetails(check, recipeDetail) {
     setRecipeDetail(recipeDetail);
   }
-  
-  // Function to navigate to Home Page 
-  function handleNavigateHome(){
+
+  // Navigation handlers
+  function handleNavigateHome() {
     setRecipeDetail(null);
-    navigate('/home');
+    navigate("/home");
   }
 
-  // Function to navigate to Profile Page 
-  function handleNavigateProfile(userId){
+  function handleNavigateProfile(userId) {
     setRecipeDetail(null);
-    navigate(`/profile/${userId}`)
+    navigate(`/profile/${userId}`);
   }
 
   return (
     <div>
-      <Header isHome={false} handleNavigateHome = {handleNavigateHome} handleNavigateProfile = {handleNavigateProfile} />
+      <Header
+        isHome={false}
+        handleNavigateHome={handleNavigateHome}
+        handleNavigateProfile={handleNavigateProfile}
+      />
       {recipeDetail ? (
-          <RecipeDetail recipe={recipeDetail} />
-        ) : (
-      <div className="profile-container">
-        <User user={user} />
-        <h1 className="saved-recipes-text">Saved Recipes</h1>
-        
+        <RecipeDetail recipe={recipeDetail} />
+      ) : (
+        <div className="profile-container">
+          <User user={user} />
+          <h1 className="saved-recipes-text">Saved Recipes</h1>
+
           <div className="profile-recipe-catalogue-container">
-            {recipes &&
-              recipes.map((recipe, index) => {
-                return (
-                  <RecipeList
-                    key={index}
-                    recipe={recipe}
-                    handleRecipeDetails={handleRecipeDetails}
-                    isBookmarked={savedRecipes.includes(recipe.id)}
-                    isHome = {false}
-                  />
-                );
-              })}
+            {recipes.length > 0 ? (
+              recipes.map((recipe, index) => (
+                <RecipeList
+                  key={index}
+                  recipe={recipe}
+                  handleRecipeDetails={handleRecipeDetails}
+                  isBookmarked={savedRecipes.includes(recipe.id)}
+                  isHome={false}
+                />
+              ))
+            ) : (
+              <p className="no-recipes">No saved recipes yet.</p>
+            )}
           </div>
-      </div>)}
+        </div>
+      )}
     </div>
   );
 };

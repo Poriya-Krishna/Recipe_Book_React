@@ -3,27 +3,32 @@ import "../customInput/Input.scss";
 import { useField } from "formik";
 
 /**
- * A custom input component that uses Formik hooks to handle form input and validation.
- * 
- * @param {string} label - The label for the input.
- * @param {object} props - Additional props to pass to the input element.
- * @returns A custom input element with validation and error handling.
+ * Custom Input with floating label and error handling
  */
-const Input = ({label, ...props}) => {
-    const [field, meta] = useField(props);
+const Input = ({ label, ...props }) => {
+  const [field, meta] = useField(props);
+  const hasError = meta.touched && meta.error;
+
   return (
     <div className='input-container'>
-      <input 
-      autoComplete='off'
+      <input
+        id={props.name}
+        type={props.type || "text"}
+        autoComplete='off'
+        aria-label={label}
         {...field}
-        {...props}  
-        className = {meta.touched && meta.error ? "input-error":""}
-        
+        {...props}
+        className={hasError ? "input-error" : ""}
       />
-      <label className = { !field.value ?  'label' : 'hide-label'} >{label}</label>
-      {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
+      <label
+        htmlFor={props.name}
+        className={!field.value ? 'label' : 'hide-label'}
+      >
+        {label}
+      </label>
+      {hasError && <div className='error'>{meta.error}</div>}
     </div>
-  )
-}
+  );
+};
 
 export default Input;
