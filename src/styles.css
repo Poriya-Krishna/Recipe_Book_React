@@ -61,6 +61,11 @@ body{background:linear-gradient(180deg,#071025 0%, #071a2a 60%); color:#e6eef8;}
   position: relative;
 }
 
+.logo-text .city-name {
+  font-size: 1rem;   /* smaller than the main */
+  font-weight: 500;  /* slightly lighter, optional */
+}
+
 /* Menu Toggle Button */
 .menu-toggle {
   display: none;

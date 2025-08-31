@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-export default function Navbar(){
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeGlitter, setActiveGlitter] = useState(null);
 
@@ -29,10 +29,13 @@ export default function Navbar(){
     }
   };
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (isMenuOpen && !e.target.closest('.nav-links') && !e.target.closest('.menu-toggle')) {
+      if (
+        isMenuOpen &&
+        !e.target.closest('.nav-links') &&
+        !e.target.closest('.menu-toggle')
+      ) {
         setIsMenuOpen(false);
       }
     };
@@ -49,7 +52,7 @@ export default function Navbar(){
   };
 
   const renderNavLink = (to, text) => (
-    <motion.div 
+    <motion.div
       className="nav-link-container"
       whileTap={{ scale: 0.95 }}
       onHoverStart={() => setActiveGlitter(text)}
@@ -57,7 +60,11 @@ export default function Navbar(){
     >
       <NavLink
         to={to}
-        className={({ isActive }) => `nav-link ${isActive ? 'active' : ''} ${activeGlitter === text ? 'glitter-active' : ''}`}
+        className={({ isActive }) =>
+          `nav-link ${isActive ? 'active' : ''} ${
+            activeGlitter === text ? 'glitter-active' : ''
+          }`
+        }
         onClick={(e) => {
           createBurstParticles(e, text);
           setIsMenuOpen(false);
@@ -73,7 +80,7 @@ export default function Navbar(){
               style={{
                 '--delay': `${i * 0.1}s`,
                 '--x': `${Math.random() * 100}%`,
-                '--y': `${Math.random() * 100}%`
+                '--y': `${Math.random() * 100}%`,
               }}
             />
           ))}
@@ -85,25 +92,33 @@ export default function Navbar(){
   );
 
   return (
-    <motion.nav 
-      initial={{y:-50,opacity:0}} 
-      animate={{y:0,opacity:1}} 
-      transition={{duration:0.5}} 
+    <motion.nav
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
       className="navbar"
     >
       <div className="nav-content">
+        {/* Logo Section */}
         <motion.div
           className="logo-container"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <NavLink to="/" className="logo-link">
-            <img src="/logo.png" alt="Recipe Book" className="logo" />
-            <span className="logo-text">Recipe Book</span>
+            <img
+              src="/poriya-resto.png"
+              alt="Poriya's Resto Logo"
+              className="logo"
+            />
+            <span className="logo-text">
+              PORIYA’s Étoile, <span className="city-name">London</span>
+            </span>
           </NavLink>
         </motion.div>
 
-        <motion.button 
+        {/* Menu Toggle */}
+        <motion.button
           className={`menu-toggle ${isMenuOpen ? 'open' : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           whileTap={{ scale: 0.95 }}
@@ -114,12 +129,13 @@ export default function Navbar(){
           <span></span>
         </motion.button>
 
-        <motion.div 
+        {/* Navigation Links */}
+        <motion.div
           className={`nav-links ${isMenuOpen ? 'open' : ''}`}
           initial={false}
-          animate={{ 
+          animate={{
             right: isMenuOpen ? 0 : '-100%',
-            opacity: isMenuOpen ? 1 : 0.8
+            opacity: isMenuOpen ? 1 : 0.8,
           }}
           transition={{ duration: 0.3 }}
         >
@@ -130,5 +146,5 @@ export default function Navbar(){
         </motion.div>
       </div>
     </motion.nav>
-  )
+  );
 }
