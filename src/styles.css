@@ -808,3 +808,76 @@ body{background:linear-gradient(180deg,#071025 0%, #071a2a 60%); color:#e6eef8;}
   .sidebar{width:100%;display:flex;overflow:auto}
   .recipe-detail{grid-template-columns:1fr}
 }
+
+/* === Portal Transition Effect === */
+.portal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, rgba(0,0,0,0.85), transparent);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+  transform: scale(0);
+  transition: transform 1.2s ease-out;
+}
+
+.portal-overlay.active {
+  transform: scale(3);
+}
+
+/* Glowing explosion particles */
+.portal-particle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: hsl(var(--hue), 100%, 60%);
+  filter: blur(3px);
+  left: 50%;
+  top: 50%;
+  animation: fly 1s forwards ease-out;
+}
+
+@keyframes fly {
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(0.2);
+    opacity: 0;
+  }
+}
+/* === RecipePage entry effect === *//* Spark particles */
+.glitter-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.glitter-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: hsl(var(--hue), 90%, 70%);
+  border-radius: 50%;
+  animation: glitterMove var(--duration, 0.8s) forwards;
+}
+
+@keyframes glitterMove {
+  to {
+    transform: translate(var(--dx), var(--dy));
+    opacity: 0;
+  }
+}
+
+.fade-overlay {
+  position: absolute;
+  inset: 0;
+  background: black;
+  z-index: 20;
+}
+
+
+
