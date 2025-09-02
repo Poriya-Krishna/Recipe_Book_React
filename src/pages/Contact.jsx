@@ -1,11 +1,36 @@
 import React from "react";
 import ProfileCard from "./ProfileCard.jsx";
-
+import Waves from "./Waves";
 
 export default function Contact() {
   return (
-    <div style={{ padding: 50, color: "#e6eef8" }}>
-    
+    <div style={{ position: "relative", padding: 50, color: "#000000ff" }}>
+      {/* Waves Background */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
+          overflow: "hidden",
+        }}
+      >
+        <Waves
+          lineColor="#fff"
+          backgroundColor="rgba(1, 0, 41, 1)"
+          waveSpeedX={0.02}
+          waveSpeedY={0.01}
+          waveAmpX={40}
+          waveAmpY={20}
+          friction={0.9}
+          tension={0.01}
+          maxCursorMove={120}
+          xGap={12}
+          yGap={36}
+        />
+      </div>
 
       {/* Profile Cards Row */}
       <div
@@ -15,6 +40,8 @@ export default function Contact() {
           marginTop: "20px",
           justifyContent: "center",
           flexWrap: "wrap",
+          position: "relative",
+          zIndex: 1, // ensures cards stay above waves
         }}
       >
         <ProfileCard
