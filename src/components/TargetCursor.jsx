@@ -3,7 +3,7 @@ import React from "react";
 import { gsap } from "gsap";
 import './TargetCursor.css';
 
-export const TargetCursor = ({ targetSelector = '.cursor-target', spinDuration = 2, hideDefaultCursor = true }) => {
+export const TargetCursor = ({ targetSelector = '.cursor-target', spinDuration = 5, hideDefaultCursor = true }) => {
   const cursorRef = useRef(null);
   const cornersRef = useRef(null);
   const spinTl = useRef(null);

@@ -246,7 +246,7 @@ body{background:linear-gradient(180deg,#071025 0%, #071a2a 60%); color:#e6eef8;c
 /* Neon Glow */
 .nav-link.active {
   color: var(--accent);
-  box-shadow: 0 0 10px rgba(255, 152, 0, 0.2);
+  box-shadow: 0 0 10px rgba(190, 146, 0, 0.2);
 }
 
 .nav-link:hover {
@@ -267,7 +267,7 @@ body{background:linear-gradient(180deg,#071025 0%, #071a2a 60%); color:#e6eef8;c
 }
 
 .nav-link:hover .neon-glow {
-  opacity: 0.15;
+  opacity: 0.1;
 }
 
 /* Burst Animation */
@@ -868,7 +868,7 @@ body{background:linear-gradient(180deg,#071025 0%, #071a2a 60%); color:#e6eef8;c
   height: 6px;
   background: hsl(var(--hue), 90%, 70%);
   border-radius: 50%;
-  animation: glitterMove var(--duration, 0.8s) forwards;
+  animation: glitterMove var(--duration, 0.8=s) forwards;
 }
 
 @keyframes glitterMove {
