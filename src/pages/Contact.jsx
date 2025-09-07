@@ -46,11 +46,12 @@ export default function Contact() {
       >
         <ProfileCard
           name="Ved Sanghavi"
+          nameStyle={{color: "#000000ff"}}
           title="Ignite CP"
           handle="javicodes"
           status="Online"
           contactText="T008"
-          avatarUrl="/ved.jpg"
+          avatarUrl="/ved1.jpg"
           showUserInfo={true}
           enableTilt={true}
           enableMobileTilt={false}

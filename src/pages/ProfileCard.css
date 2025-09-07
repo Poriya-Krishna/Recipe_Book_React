@@ -13,12 +13,12 @@
   --icon: none;
   --behind-gradient: none;
   --inner-gradient: none;
-  --sunpillar-1: hsl(41, 100%, 34%);
-  --sunpillar-2: hsl(53, 100%, 69%);
-  --sunpillar-3: hsl(37, 100%, 45%);
+  --sunpillar-1: hsl(0, 0%, 100%);
+  --sunpillar-2: hsl(0, 0%, 27%);
+  --sunpillar-3: hsl(0, 0%, 73%);
   --sunpillar-4: hsl(0, 0%, 0%);
-  --sunpillar-5: hsl(228, 100%, 74%);
-  --sunpillar-6: hsl(28, 100%, 28%);
+  --sunpillar-5: hsl(0, 0%, 52%);
+  --sunpillar-6: hsl(0, 0%, 0%);
   --sunpillar-clr-1: var(--sunpillar-1);
   --sunpillar-clr-2: var(--sunpillar-2);
   --sunpillar-clr-3: var(--sunpillar-3);
@@ -184,8 +184,8 @@
   opacity: 0;
 }
 
-.pc-card:hover .pc-shine,
-.pc-card.active .pc-shine {
+.pc-card:hover ,
+.pc-card.active  {
   filter: brightness(0.85) contrast(1.5) saturate(0.5);
   animation: none;
 }
@@ -384,7 +384,7 @@
   margin: 0;
   font-size: min(5svh, 3em);
   margin: 0;
-  background-image: linear-gradient(to bottom, #fff, #6f6fbe);
+  background-image: linear-gradient(to bottom, #fff, #000000);
   background-size: 1em 1.5em;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -399,7 +399,7 @@
   font-size: 16px;
   margin: 0 auto;
   width: min-content;
-  background-image: linear-gradient(to bottom, #fff, #4a4ac0);
+  background-image: linear-gradient(to bottom, #fff, #000000);
   background-size: 1em 1.5em;
   -webkit-text-fill-color: transparent;
   background-clip: text;
