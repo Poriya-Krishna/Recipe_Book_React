@@ -1,8 +1,16 @@
-import React from 'react';
+
+
+import React from "react";
+import "./footer.css"
+
 export default function Footer(){
-  return (
-    <footer style={{padding:'14px', textAlign:'center', color:'#9fb4d1', fontSize:12, marginTop:24}}>
-      © PORIYA’s Étoile. All rights reserved.
-    </footer>
-  )
+    return(
+        <>
+        <footer className="main-footer" style={{backgroundColor:'#0C1627', color:'white'}}>
+            <div className="footer-content">
+                <p>© PORIYA’s Étoile. All rights reserved.</p>
+            </div>
+        </footer>
+        </>
+    );
 }
