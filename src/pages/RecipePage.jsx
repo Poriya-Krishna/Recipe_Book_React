@@ -1,4 +1,6 @@
   // src/pages/RecipePage.jsx
+  import * as THREE from "three";
+ import * as TSL from "three/examples/jsm/nodes/Nodes.js";
   import React, { useState, useEffect } from "react";
   import { useParams, useNavigate } from "react-router-dom";
   import recipes from "../data/recipes.json";
@@ -18,6 +20,7 @@
     const [showIngredients, setShowIngredients] = useState(true);
     const [currentStep, setCurrentStep] = useState(0);
     const [newurl, setUrl] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     // const [favorite, setFavorite] = useState(false);
     //const [isFavorite, setIsFavorite] = useState(false);
 
@@ -25,7 +28,6 @@
   //   setIsFavorite((prev)=>
   //   prev.includes(recipe.id)?prev.filter((id)=>id!==recipe.id):[...prev, recipe.id]);
   // };
-  <link rel="stylesheet" href="/css/video-react.css" />
 useEffect(() => {
   const foundRecipe = recipes.find((r) => r.id === parseInt(id));
   if (foundRecipe) {
@@ -37,6 +39,13 @@ useEffect(() => {
     //   setUrl(`https://www.youtube.com/watch?v=${videoId}`);
     // }
   }
+
+  const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+
 }, [id]);
     if (!recipe) {
       return (
@@ -115,18 +124,18 @@ useEffect(() => {
         <br />
 
         {/* Tabs */}
-        <div className="display">
+        <div className={`display ${isMobile?"mobile":""}`}>
           <div className="video-container">
             <div className="card cursor-target">
-  <VideoPlayer
-    controls={true}
-                    src={recipe.video}
-                    poster={recipe.photo}
-                    width="720"
-                    height="420"
-                    onReady={handlePlayerReady}
+              <VideoPlayer
+                controls={true}
+                                src={recipe.video}
+                                poster={recipe.photo}
+                                width="720"
+                                height="420"
+                                onReady={handlePlayerReady}
 
-  />
+              />
             </div>
           </div>
           <div>
@@ -154,17 +163,20 @@ useEffect(() => {
               </div>
             </div>
           {showIngredients && (
-          <section className="ingredients-section">
-            <h2 className="section-title">🥬 Ingredients</h2>
-            <div className="ingredients-grid">
-              {recipe.ingredients.map((ingredient, index) => (
-                <div key={index} className="ingredient-card">
-                  <span className="ingredient-icon">🌿</span>
-                  <span className="ingredient-text">{ingredient}</span>
+            <div className= {isMobile?"mobile":""}>
+              <section className="ingredients-grid">
+                <h2 className="section-title">🥬 Ingredients</h2>
+                <div className="ingredients-grid">
+                  {recipe.ingredients.map((ingredient, index) => (
+                    <div key={index} className="ingredient-card">
+                      <span className="ingredient-icon">🌿</span>
+                      <span className="ingredient-text">{ingredient}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </section>
             </div>
-          </section>
+          
         )}
 
         {/* Instructions */}
