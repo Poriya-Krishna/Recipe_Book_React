@@ -48,7 +48,7 @@ export default function Contact() {
           name="Ved Sanghavi"
           nameStyle={{color: "#000000ff"}}
           title="Ignite CP"
-          handle="javicodes"
+          handle="ved_sanghavi"
           status="Online"
           contactText="T008"
           avatarUrl="/ved1.jpg"
@@ -60,11 +60,11 @@ export default function Contact() {
 
         <ProfileCard
           name="Krishna Poriya"
-          title="UI/UX Designer"
-          handle="mariaux"
-          status="Away"
+          title="Software Developer"
+          handle="krishna_poriya"
+          status="Active"
           contactText="T010"
-          avatarUrl="/krishna.jpg"
+          avatarUrl="/krishna4.jpg"
           showUserInfo={true}
           enableTilt={true}
           enableMobileTilt={false}
@@ -74,7 +74,7 @@ export default function Contact() {
         <ProfileCard
           name="Prachi Darji"
           title="DevOps Engineer"
-          handle="kevinops"
+          handle="prachi_darji"
           status="Busy"
           contactText="T013"
           avatarUrl="/prachi.jpg"
