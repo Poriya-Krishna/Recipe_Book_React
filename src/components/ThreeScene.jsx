@@ -1,62 +1,65 @@
 import React, { useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, Html } from "@react-three/drei";
+import { OrbitControls, Html, useGLTF } from "@react-three/drei";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-function FloatingFood({ name, recipeId, onNavigate, triggerTransition, isZooming }) {
+// Floating model component
+function FloatingFood({ name, recipeId, triggerTransition, isZooming }) {
   const ref = useRef();
   const hoverRef = useRef(false);
+  const { scene } = useGLTF("/models/paneerbuttermasala.glb");
 
   useFrame((_, delta) => {
-    ref.current.rotation.y += delta * 0.2;
+    // 🔥 model rotates on its own axis
+    if (ref.current) {
+      ref.current.rotation.y += delta * 0.2; // adjust for faster/slower spin
+    }
 
+    // scaling effect (hover / zoom transition)
     let targetScale = hoverRef.current ? 1.1 : 1;
-    if (isZooming) targetScale = 3; // zoom during transition
-    ref.current.scale.lerp({ x: targetScale, y: targetScale, z: targetScale }, 0.1);
+    if (isZooming) targetScale = 3;
+    ref.current.scale.lerp(
+      { x: targetScale, y: targetScale, z: targetScale },
+      0.1
+    );
   });
 
   return (
-    <Float floatIntensity={2} rotationIntensity={0.6}>
-      <group
-        ref={ref}
-        dispose={null}
-        scale={[1.8, 1.8, 1.8]} // 🔥 Increased base size
-        onPointerOver={() => (hoverRef.current = true)}
-        onPointerOut={() => (hoverRef.current = false)}
-        onClick={() => triggerTransition(recipeId)}
-        style={{ cursor: "pointer" }}
-      >
-        <mesh position={[0, -0.2, 0]} rotation={[0.2, 0.6, 0]}>
-          <torusGeometry args={[1.8, 0.65, 32, 64]} /> {/* 🔥 Larger torus */}
-          <meshStandardMaterial roughness={0.4} metalness={0.1} color={"#f59e0b"} />
-        </mesh>
-        <mesh position={[0, 0.6, 0]}> {/* 🔥 Lifted sphere a bit */}
-          <sphereGeometry args={[0.8, 32, 32]} /> {/* 🔥 Bigger sphere */}
-          <meshStandardMaterial roughness={0.6} color={"#ecfccb"} />
-        </mesh>
-        <Html position={[0, -2, 0]}>
-          <section className="cursor-target">
-            <div
-              style={{
-                width: 260,
-                textAlign: "center",
-                color: "#e6eef8",
-                padding: 8,
-                background: "rgba(0,0,0,0.35)",
-                borderRadius: 8,
-                cursor: "pointer",
-              }}
-            >
-              <strong style={{ fontSize: 16 }}>{name || "Heavenly Dish"}</strong>
-              <div style={{ fontSize: 13, color: "#9fb4d1", marginTop: 6 }}>
-                Click for full recipe!
-              </div>
+    <group
+      ref={ref}
+      dispose={null}
+      scale={[20, 20, 20]} // adjust to fit your model
+      onPointerOver={() => (hoverRef.current = true)}
+      onPointerOut={() => (hoverRef.current = false)}
+      onClick={() => triggerTransition(recipeId)}
+    >
+      <primitive object={scene} />
+
+      {/* Label */}
+      <Html position={[0, -2, 0]}>
+        <section className="cursor-target">
+          <div
+            style={{
+              width: 260,
+              textAlign: "center",
+              color: "#e6eef8",
+              padding: 8,
+              background: "rgba(0,0,0,0.35)",
+              borderRadius: 8,
+              cursor: "pointer",
+            }}
+          >
+            <strong style={{ fontSize: 16 }}>
+              {name || "Heavenly Dish"}
+            </strong>
+            <div style={{ fontSize: 13, color: "#9fb4d1", marginTop: 6 }}>
+              Click for full recipe!
             </div>
-          </section>
-        </Html>
-      </group>
-    </Float>
+          </div>
+        </section>
+      </Html>
+    </group>
   );
 }
 
@@ -88,8 +91,11 @@ export default function ThreeScene({ recipe }) {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <section className="cursor-target" style={{ width: "100%", height: "100%" }}>
-        <Canvas camera={{ position: [0, 1.6, 3.2], fov: 50 }}> {/* 🔥 Camera closer */}
+      <section
+        className="cursor-target"
+        style={{ width: "100%", height: "100%" }}
+      >
+        <Canvas camera={{ position: [0, 0.05, 0.05], fov: 4 }}>
           <ambientLight intensity={0.6} />
           <directionalLight position={[5, 5, 5]} intensity={1} />
           <directionalLight position={[-5, 2, -3]} intensity={0.6} />
@@ -97,19 +103,22 @@ export default function ThreeScene({ recipe }) {
           <FloatingFood
             name={title}
             recipeId={recipe?.id}
-            onNavigate={handleNavigate}
             triggerTransition={triggerTransition}
             isZooming={transitionStep === "zoomfade"}
           />
 
+          {/* Camera orbits around model */}
           <OrbitControls
             enablePan={false}
-            autoRotate={transitionStep === "idle"}
-            autoRotateSpeed={0.6}
+            autoRotate={true}
+            autoRotateSpeed={0.5} // slower orbit
+            minDistance={1.2} // lock zoom in/out
+            maxDistance={2.5}
           />
         </Canvas>
       </section>
 
+      {/* Transition overlays */}
       <AnimatePresence>
         {transitionStep === "glitter" && (
           <motion.div
@@ -149,3 +158,6 @@ export default function ThreeScene({ recipe }) {
     </div>
   );
 }
+
+// 🔥 Preload your GLB so it’s ready before first render
+useGLTF.preload("/models/paneerbuttermasala.glb");
